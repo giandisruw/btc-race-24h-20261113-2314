@@ -54,3 +54,30 @@ Dev window (2026-11-12 23:14 UTC → 2026-11-13 23:14 UTC), new kit
 Two full runs, reply bytes identical (deterministic). The dev gate is
 net PnL > $0 — this bot clears it. The previous race's bot scores −12.07
 USDC on this same window, so it was not re-used.
+
+## Verification
+
+Measured with the exact-integer protocol driver described above (the real
+`main.py`, end to end, kit bundle sha256
+`30594725ff09bc87af1c57506fe177c927581e0435020a09253cae09083ffa3c`).
+
+- **Dev window:** 2026-11-12 23:14 UTC → 2026-11-13 23:14 UTC, 1,440 bars,
+  0 gaps. First close $71,408.76, last close $67,900.67: **−4.91%**
+  downtrend. Buy-and-hold on the same window: −52.59 USDC (−5.26%).
+- **Bot result:** net PnL **+11.9502 USDC (+1.195%)**, **4 trades**, fees
+  **0.8049 USDC**, max drawdown **1.07%**. Fills: buy 0.01452934 BTC @
+  68,798.70560 (bar 433); sell 50% @ 69,686.94480 (bar 859); sell 25% @
+  69,843.71988 (bar 860); sell rest @ 69,488.83215 (bar 881, close below
+  EMA(48)). Flat from bar 881.
+- **Determinism:** two full runs, reply bytes identical.
+- **Stress test:** 20 block-bootstrap (1-hour blocks) copies of the new
+  window — median **+7.40 USDC**, **9/20 copies lose**. For comparison,
+  the old race's bot scores median −99.05 USDC (20/20 lose) on the same
+  copies.
+- **Honest cross-check:** on the old dev window the same bot scores
+  **−11.94 USDC (−1.194%)**, 2 trades, max drawdown 1.50%. No
+  single-window rule wins on both windows; this config was chosen for
+  its stress profile on the window that gates entry.
+
+See `NOTES.md` for the full evidence, including the strategy search,
+edge tests, and what was not verified.
